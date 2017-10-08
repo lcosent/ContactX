@@ -1,3 +1,8 @@
+import MaterialsIcon from 'react-native-vector-icons/MaterialIcons';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+import { Hideo,Kaede,Kohana,Fumi } from 'react-native-textinput-effects';
+
+import Expo, { SQLite } from 'expo';
 import React from 'react';
 import { Component } from 'react';
 import {
@@ -18,6 +23,8 @@ import { MonoText } from '../components/StyledText';
 import { List, ListItem, SearchBar } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 
+const db = SQLite.openDatabase({ name: 'dbContact.db' });
+
 
 export default class NewContact extends React.Component {
 
@@ -29,14 +36,7 @@ export default class NewContact extends React.Component {
 constructor(props) {
     super(props);
 
-    this.state = {
-      loading: false,
-      data: [],
-      page: 1,
-      seed: 1,
-      error: null,
-      refreshing: false,
-    };
+
   }
 
   renderSeparator = () => {
@@ -131,23 +131,75 @@ constructor(props) {
       inputValue: '',
     }));
   };
+  handleEmail = (text) => {
+     this.setState({ email: text })
+  }
+  handlePassword = (text) => {
+     this.setState({ password: text })
+  }
+  login = (email, pass) => {
+        alert('email: ' + email + ' password: ' + pass)
+     }
 
+  state = {
+     email: '',
+     password: ''
+  }
   render() {
     return (
       <View style={styles.formView}>
-        <TextInput
-          style={styles.inputForm}
-          value={this.state.inputValue}
-          onChangeText={this._handleTextChange}
-          placeholder="Input todo"
-        />
-        <Button style={styles.buttonView}
-          title="Add"
-          onPress={this._handleSendButtonPress}
-        />
+
+        <TextInput style = {styles.input}
+           underlineColorAndroid = "transparent"
+           placeholder = "Email"
+           placeholderTextColor = "#9a73ef"
+           autoCapitalize = "none"
+           onChangeText = {this.handleEmail}
+           value="test email"/>
+
+        <TextInput style = {styles.input}
+           underlineColorAndroid = "transparent"
+           placeholder = "Password"
+           placeholderTextColor = "#9a73ef"
+           autoCapitalize = "none"
+           onChangeText = {this.handlePassword}
+           value="ttest value"/>
+
+
+        <TouchableOpacity
+           style = {styles.submitButton}
+           onPress = {
+              () => this.props.navigation.navigate("detailsScreen",{email:this.state.email,password:this.state.password})
+
+           }>
+           <Text style = {styles.submitButtonText}> Submit </Text>
+        </TouchableOpacity>
+
+
+
       </View>
 
     );
+
+
+    return (
+      <View style={{ margin: 5 }}>
+        {items.map(({ id, done, value }) => (
+          <TouchableOpacity
+            key={id}
+            onPress={() => this.props.onPressItem && this.props.onPressItem(id)}
+            style={{
+              padding: 5,
+              backgroundColor: done ? '#aaffaa' : 'white',
+              borderColor: 'black',
+              borderWidth: 1,
+            }}>
+            <Text>{value}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+
   }
 
 
@@ -253,4 +305,34 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2e78b7',
   },
+  title: {
+  paddingBottom: 16,
+  textAlign: 'center',
+  color: '#404d5b',
+  fontSize: 20,
+  fontWeight: 'bold',
+  opacity: 0.8,
+  },
+  card1: {
+    paddingVertical: 16,
+  },
+  card2: {
+    padding: 16,
+  },
+  input: {
+     margin: 15,
+     height: 40,
+     borderColor: '#7a42f4',
+     borderWidth: 1
+  },
+  submitButton: {
+      backgroundColor: '#7a42f4',
+      padding: 10,
+      margin: 15,
+      height: 40,
+   },
+   submitButtonText:{
+      color: 'white'
+   },
+
 });

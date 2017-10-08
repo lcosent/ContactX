@@ -1,3 +1,4 @@
+import Expo, { SQLite } from 'expo';
 import React from 'react';
 import { Component } from 'react';
 import {
@@ -68,88 +69,20 @@ constructor(props) {
     );
   };
 
-  // componentDidMount() {
-  //   this.makeRemoteRequest();
-  // }
 
 
-
-
-
-  makeRemoteRequest = () => {
-    const { page, seed } = this.state;
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=3`;
-    this.setState({ loading: true });
-
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: page === 1 ? res.results : [...this.state.data, ...res.results],
-          error: res.error || null,
-          loading: false,
-          refreshing: false
-        });
-      })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
-  };
-
-    handleRefresh = () => {
-    this.setState(
-      {
-        page: 1,
-        seed: this.state.seed + 1,
-        refreshing: true
-      },
-      () => {
-        this.makeRemoteRequest();
-      }
-    );
-  };
-  componentDidMount() {
-    this.makeRemoteRequest();
-  }
-
-
+// this.props.navigation.params.email;
 
   render() {
     // return null
+    emailval ="aa";
+
     return (
       <View style={styles.container}>
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={styles.contentContainer}>
-          <View style={styles.barContainer}>
-            <Text style={styles.titleText}>Contacts</Text>
-          </View>
 
-      <List containerStyle={{ borderTopWidth: 0, marginTop: 0, borderBottomWidth: 0 }}>
-      <FlatList
-        data={this.state.data}
-        renderItem={({ item }) => (
-          <ListItem
-          onPress={()=>{
-            this.props.navigation.navigate("detailsScreen")
-          }}
-            roundAvatar
-            title={`${item.name.first} ${item.name.last}`}
-            subtitle={item.email}
-            avatar={{ uri: item.picture.thumbnail }}
-            containerStyle={{ borderBottomWidth: 0.3 }}
-           />
-        )}
-          keyExtractor={item => item.email}
-          ItemSeparatorComponent={this.renderSeparator}
-          ListHeaderComponent={this.renderHeader}
-          ListFooterComponent={this.renderFooter}
-          onRefresh={this.handleRefresh}
-          refreshing={this.state.refreshing}
-          onEndReachedThreshold={50}
-      />
-    </List>
-        </ScrollView>
+      <Text>{emailval}</Text>
+
+
       </View>
     );
   }
