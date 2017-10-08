@@ -17,23 +17,10 @@ import { MonoText } from '../components/StyledText';
 
 import { List, ListItem, SearchBar } from 'react-native-elements';
 
-export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    header: (
-          <View style={{
-              marginBottom: 0,
-              backgroundColor:'#009688',
-              }}>
-            <Text style={{
-              fontSize: 35,
-                color: 'white',
-                lineHeight: 60,
-                textAlign:'left',
-                marginLeft: 10,
-              }}>Contacts</Text>
-          </View>
-        ),
-  };
+export default class DetailsScreen extends React.Component {
+static navigationOptions=({navigation})=>({
+  title:navigation.state.params.title
+})
 
 constructor(props) {
     super(props);
@@ -81,9 +68,12 @@ constructor(props) {
     );
   };
 
-  componentDidMount() {
-    this.makeRemoteRequest();
-  }
+  // componentDidMount() {
+  //   this.makeRemoteRequest();
+  // }
+
+
+
 
 
   makeRemoteRequest = () => {
@@ -118,37 +108,37 @@ constructor(props) {
       }
     );
   };
-
-  // handleLoadMore = () => {
-  //   this.setState(
-  //     {
-  //       page: this.state.page + 1
-  //     },
-  //     () => {
-  //       this.makeRemoteRequest();
-  //     }
-  //   );
-  // };
+  componentDidMount() {
+    this.makeRemoteRequest();
+  }
+  
 
 
   render() {
+    // return null
     return (
       <View style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}>
+          <View style={styles.barContainer}>
+            <Text style={styles.titleText}>Contacts</Text>
+          </View>
 
       <List containerStyle={{ borderTopWidth: 0, marginTop: 0, borderBottomWidth: 0 }}>
       <FlatList
         data={this.state.data}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={()=>{
-            this.props.navigation.navigate("detailsScreen",{title:`${item.name.first} ${item.name.last}`})
-          }}><ListItem
-
+          <ListItem
+          onPress={()=>{
+            this.props.navigation.navigate("detailsScreen")
+          }}
             roundAvatar
             title={`${item.name.first} ${item.name.last}`}
             subtitle={item.email}
             avatar={{ uri: item.picture.thumbnail }}
             containerStyle={{ borderBottomWidth: 0.3 }}
-           /></TouchableOpacity>
+           />
         )}
           keyExtractor={item => item.email}
           ItemSeparatorComponent={this.renderSeparator}
@@ -159,6 +149,7 @@ constructor(props) {
           onEndReachedThreshold={50}
       />
     </List>
+        </ScrollView>
       </View>
     );
   }
