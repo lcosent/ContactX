@@ -1,14 +1,13 @@
 import Expo, { SQLite } from 'expo';
 import React from 'react';
 import { Component } from 'react';
+import { AppRegistry, View, Image } from 'react-native';
 import {
-  Image,
   Platform,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
   FlatList,
   ActivityIndicator,
 } from 'react-native';
@@ -20,6 +19,26 @@ import { List, ListItem, SearchBar } from 'react-native-elements';
 
 const db = SQLite.openDatabase({ name: 'dbContact.db' });
 
+const sampleContact=[
+    {
+      name: 'Amy Farha',
+      picture:{
+        thumbnail:'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+      },
+      email: 'amy@gmail.com',
+      rating:3,
+      performan:3.5,
+    },
+    {
+      name: 'Chris Jackson',
+      picture:{
+        thumbnail: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+      },
+      email: 'chris@gmail.com',
+      rating:5,
+      performan:4,
+    },
+];
 
 export default class DetailsScreen extends React.Component {
 static navigationOptions=({navigation})=>({
@@ -28,16 +47,8 @@ static navigationOptions=({navigation})=>({
 
 constructor(props) {
     super(props);
+    this.state = {};
 
-
-    this.state = {
-      loading: false,
-      data: [],
-      page: 1,
-      seed: 1,
-      error: null,
-      refreshing: false,
-    };
   }
 
   renderSeparator = () => {
@@ -53,9 +64,6 @@ constructor(props) {
     );
   };
 
-  renderHeader = () => {
-    return <SearchBar placeholder="Type Here..." lightTheme round />;
-  };
 
   renderFooter = () => {
     if (!this.state.loading) return null;
@@ -72,6 +80,36 @@ constructor(props) {
       </View>
     );
   };
+  componentDidMount() {
+    this.makeRemoteRequest();
+  }
+
+
+  makeRemoteRequest = () => {
+    const {state}=this.props.navigation ;
+    // console.log(state);
+    // name='Amy Farha';
+    name=state.params.title;
+    // console.log(name);
+
+   displaydata = 0;
+   wrapDisplaydata=new Array();
+    for(i=0;i<sampleContact.length;i++){
+      if(name==sampleContact[i]['name']){
+        displaydata=sampleContact[i];
+      }
+    }
+    wrapDisplaydata.push(displaydata);
+    console.log("wrapDisplaydata is ",wrapDisplaydata);
+    console.log(displaydata['name']);
+    console.log(displaydata['picture']);
+
+    this.setState({data:wrapDisplaydata});
+      console.log(`${this.state}`)
+  };
+
+
+
 
 
 
@@ -80,15 +118,17 @@ constructor(props) {
   render() {
 
 
-    const {state}=this.props.navigation  ;
+
     return (
 
-      <View>
-
-        <Text>{state.params.title}"aa"</Text>
-
-
+      <View style={styles.container}>
+      <Image
+        style={{width: 50, height: 50}}
+        source={{uri: `${this.state.data}`}}
+        // source={{uri: 'http://shanghaitech.me/makeapp/static/image/SO.png'}}
+      />
       </View>
+
     );
   }
 

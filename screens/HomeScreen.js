@@ -18,6 +18,26 @@ import { MonoText } from '../components/StyledText';
 import { List, ListItem, SearchBar } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 
+const sampleContact=[
+    {
+      name: 'Amy Farha',
+      picture:{
+        thumbnail:'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
+      },
+      email: 'amy@gmail.com',
+      rating:3,
+      performan:3.5,
+    },
+    {
+      name: 'Chris Jackson',
+      picture:{
+        thumbnail: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
+      },
+      email: 'chris@gmail.com',
+      rating:5,
+      performan:4,
+    },
+];
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -89,37 +109,15 @@ constructor(props) {
 
 
   makeRemoteRequest = () => {
-    const { page, seed } = this.state;
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
-    this.setState({ loading: true });
+    var loopdata= new Array()
+    for(i=0;i<sampleContact.length;i++){
+      loopdata.push(sampleContact[i]);
+    }
+    this.setState({data:loopdata});
 
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: page === 1 ? res.results : [...this.state.data, ...res.results],
-          error: res.error || null,
-          loading: false,
-          refreshing: false
-        });
-      })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
   };
 
-    handleRefresh = () => {
-    this.setState(
-      {
-        page: 1,
-        seed: this.state.seed + 1,
-        refreshing: true
-      },
-      () => {
-        this.makeRemoteRequest();
-      }
-    );
-  };
+
 
   // handleLoadMore = () => {
   //   this.setState(
@@ -151,11 +149,11 @@ constructor(props) {
         data={this.state.data}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={()=>{
-            this.props.navigation.navigate("detailsScreen",{title:`${item.name.first} ${item.name.last}`})
+            this.props.navigation.navigate("detailsScreen",{title:`${item.name}`})
           }}><ListItem
 
             roundAvatar
-            title={`${item.name.first} ${item.name.last}`}
+            title={`${item.name}`}
             subtitle={item.email}
             avatar={{ uri: item.picture.thumbnail }}
             containerStyle={{ borderBottomWidth: 0.3 }}
@@ -165,7 +163,6 @@ constructor(props) {
           ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
           ListFooterComponent={this.renderFooter}
-          onRefresh={this.handleRefresh}
           refreshing={this.state.refreshing}
           onEndReachedThreshold={50}
       />
