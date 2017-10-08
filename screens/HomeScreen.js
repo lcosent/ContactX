@@ -16,6 +16,8 @@ import { WebBrowser } from 'expo';
 import { MonoText } from '../components/StyledText';
 
 import { List, ListItem, SearchBar } from 'react-native-elements';
+import { MaterialIcons } from '@expo/vector-icons';
+
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -30,7 +32,7 @@ export default class HomeScreen extends React.Component {
                 lineHeight: 60,
                 textAlign:'left',
                 marginLeft: 10,
-              }}>Contacts</Text>
+              }}>ContactX</Text>
           </View>
         ),
   };
@@ -88,7 +90,7 @@ constructor(props) {
 
   makeRemoteRequest = () => {
     const { page, seed } = this.state;
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
+    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=3`;
     this.setState({ loading: true });
 
     fetch(url)
@@ -134,6 +136,12 @@ constructor(props) {
   render() {
     return (
       <View style={styles.container}>
+
+      <TouchableOpacity style={{position: 'absolute', bottom: 8, right: 8, width: 64, aspectRatio: 1}}>
+        <View style={{backgroundColor: 'red',shadowOpacity: 0.2, shadowOffset: {width: 0, height: 2}, shadowColor: 'black',  borderRadius: 32, flex: 1, justifyContent: 'center', alignItems: 'center',}}>
+              <MaterialIcons name="add" size={32} color="white" />
+        </View>
+      </TouchableOpacity>
 
       <List containerStyle={{ borderTopWidth: 0, marginTop: 0, borderBottomWidth: 0 }}>
       <FlatList

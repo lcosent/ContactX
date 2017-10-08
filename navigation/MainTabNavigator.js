@@ -43,6 +43,7 @@ export default TabNavigator(
   },
   {
     navigationOptions: ({ navigation }) => ({
+      tabBarVisible:false,
       tabBarIcon: ({ focused }) => {
         const { routeName } = navigation.state;
         let iconName;
