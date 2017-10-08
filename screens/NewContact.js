@@ -36,7 +36,10 @@ export default class NewContact extends React.Component {
 constructor(props) {
     super(props);
 
-
+    this.state = {
+       email: '',
+       password: '',
+    };
   }
 
   renderSeparator = () => {
@@ -72,43 +75,24 @@ constructor(props) {
     );
   };
 
-  componentDidMount() {
-    this.makeRemoteRequest();
-  }
-
-
-  makeRemoteRequest = () => {
-    const { page, seed } = this.state;
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=10`;
-    this.setState({ loading: true });
-
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: page === 1 ? res.results : [...this.state.data, ...res.results],
-          error: res.error || null,
-          loading: false,
-          refreshing: false
-        });
-      })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
-  };
-
-    handleRefresh = () => {
-    this.setState(
-      {
-        page: 1,
-        seed: this.state.seed + 1,
-        refreshing: true
+  add(text) {
+    db.transaction(
+      tx => {
+        tx.executeSql('insert into items  value values  ?', [text]);
+        tx.executeSql('select * from items', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
       },
-      () => {
-        this.makeRemoteRequest();
-      }
+      null,
+      this.update
     );
   };
+    update = () => {};
+
+
+
+
+
 
   // handleLoadMore = () => {
   //   this.setState(
@@ -121,15 +105,14 @@ constructor(props) {
   //   );
   // };
   _handleSendButtonPress = () => {
-    if (!this.state.inputValue) {
-      return;
-    }
-    const textArray = this.state.dataSource._dataBlob.s1;
-    textArray.push(this.state.inputValue);
-    this.setState(() => ({
-      dataSource: this.state.dataSource.cloneWithRows(textArray),
-      inputValue: '',
-    }));
+    // if (!this.state.inputValue) {
+    //   return;
+    // }
+      this.add(this.state.email);
+      this.add(this.state.password);
+      var a=this.state.email
+      return this.props.navigation.navigate("detailsScreen",{title:`${a} miss??`})
+
   };
   handleEmail = (text) => {
      this.setState({ email: text })
@@ -141,11 +124,9 @@ constructor(props) {
         alert('email: ' + email + ' password: ' + pass)
      }
 
-  state = {
-     email: '',
-     password: ''
-  }
   render() {
+    // return null
+
     return (
       <View style={styles.formView}>
 
@@ -168,10 +149,7 @@ constructor(props) {
 
         <TouchableOpacity
            style = {styles.submitButton}
-           onPress = {
-              () => this.props.navigation.navigate("detailsScreen",{email:this.state.email,password:this.state.password})
-
-           }>
+           onPress = {this._handleSendButtonPress}>
            <Text style = {styles.submitButtonText}> Submit </Text>
         </TouchableOpacity>
 
@@ -180,7 +158,6 @@ constructor(props) {
       </View>
 
     );
-
 
     return (
       <View style={{ margin: 5 }}>

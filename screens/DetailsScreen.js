@@ -18,6 +18,9 @@ import { MonoText } from '../components/StyledText';
 
 import { List, ListItem, SearchBar } from 'react-native-elements';
 
+const db = SQLite.openDatabase({ name: 'dbContact.db' });
+
+
 export default class DetailsScreen extends React.Component {
 static navigationOptions=({navigation})=>({
   title:navigation.state.params.title
@@ -25,6 +28,7 @@ static navigationOptions=({navigation})=>({
 
 constructor(props) {
     super(props);
+
 
     this.state = {
       loading: false,
@@ -74,13 +78,14 @@ constructor(props) {
 // this.props.navigation.params.email;
 
   render() {
-    // return null
-    emailval ="aa";
 
+
+    const {state}=this.props.navigation  ;
     return (
-      <View style={styles.container}>
 
-      <Text>{emailval}</Text>
+      <View>
+
+        <Text>{state.params.title}"aa"</Text>
 
 
       </View>
