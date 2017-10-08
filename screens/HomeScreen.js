@@ -147,6 +147,7 @@ constructor(props) {
 
       <List containerStyle={{ borderTopWidth: 0, marginTop: 0, borderBottomWidth: 0 }}>
       <FlatList
+
         data={this.state.data}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={()=>{

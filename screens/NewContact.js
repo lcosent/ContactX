@@ -111,7 +111,7 @@ constructor(props) {
       this.add(this.state.email);
       this.add(this.state.password);
       var a=this.state.email
-      return this.props.navigation.navigate("detailsScreen",{title:`${a} miss??`})
+      return this.props.navigation.navigate("Home")
 
   };
   handleEmail = (text) => {
