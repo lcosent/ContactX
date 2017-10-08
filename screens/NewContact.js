@@ -5,10 +5,10 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  Text,
+  Text,TextInput,
   TouchableOpacity,
   View,
-  FlatList,
+  FlatList,Button,
   ActivityIndicator,
 } from 'react-native';
 import { WebBrowser } from 'expo';
@@ -19,23 +19,12 @@ import { List, ListItem, SearchBar } from 'react-native-elements';
 import { MaterialIcons } from '@expo/vector-icons';
 
 
-export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-    header: (
-          <View style={{
-              marginBottom: 0,
-              backgroundColor:'#009688',
-              }}>
-            <Text style={{
-              fontSize: 35,
-                color: 'white',
-                lineHeight: 60,
-                textAlign:'left',
-                marginLeft: 10,
-              }}>ContactX</Text>
-          </View>
-        ),
-  };
+export default class NewContact extends React.Component {
+
+  static navigationOptions=({navigation})=>({
+    title:"Add new contact"
+  })
+
 
 constructor(props) {
     super(props);
@@ -90,7 +79,7 @@ constructor(props) {
 
   makeRemoteRequest = () => {
     const { page, seed } = this.state;
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
+    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=10`;
     this.setState({ loading: true });
 
     fetch(url)
@@ -131,82 +120,38 @@ constructor(props) {
   //     }
   //   );
   // };
-
+  _handleSendButtonPress = () => {
+    if (!this.state.inputValue) {
+      return;
+    }
+    const textArray = this.state.dataSource._dataBlob.s1;
+    textArray.push(this.state.inputValue);
+    this.setState(() => ({
+      dataSource: this.state.dataSource.cloneWithRows(textArray),
+      inputValue: '',
+    }));
+  };
 
   render() {
     return (
-      <View style={styles.container}>
-
-      <TouchableOpacity onPress={()=>{
-        this.props.navigation.navigate("newContact")
-      }} style={{position: 'absolute', bottom: 8, right: 8, width: 64, aspectRatio: 1 ,zIndex:1000,}}>
-        <View style={{backgroundColor: 'red',shadowOpacity: 0.2, shadowOffset: {width: 0, height: 2}, shadowColor: 'black',  borderRadius: 32, flex: 1, justifyContent: 'center', alignItems: 'center',}}>
-              <MaterialIcons name="add" size={32} color="white" />
-        </View>
-      </TouchableOpacity>
-
-      <List containerStyle={{ borderTopWidth: 0, marginTop: 0, borderBottomWidth: 0 }}>
-      <FlatList
-        data={this.state.data}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={()=>{
-            this.props.navigation.navigate("detailsScreen",{title:`${item.name.first} ${item.name.last}`})
-          }}><ListItem
-
-            roundAvatar
-            title={`${item.name.first} ${item.name.last}`}
-            subtitle={item.email}
-            avatar={{ uri: item.picture.thumbnail }}
-            containerStyle={{ borderBottomWidth: 0.3 }}
-           /></TouchableOpacity>
-        )}
-          keyExtractor={item => item.email}
-          ItemSeparatorComponent={this.renderSeparator}
-          ListHeaderComponent={this.renderHeader}
-          ListFooterComponent={this.renderFooter}
-          onRefresh={this.handleRefresh}
-          refreshing={this.state.refreshing}
-          onEndReachedThreshold={50}
-      />
-    </List>
+      <View style={styles.formView}>
+        <TextInput
+          style={styles.inputForm}
+          value={this.state.inputValue}
+          onChangeText={this._handleTextChange}
+          placeholder="Input todo"
+        />
+        <Button style={styles.buttonView}
+          title="Add"
+          onPress={this._handleSendButtonPress}
+        />
       </View>
+
     );
   }
 
-  _maybeRenderDevelopmentModeWarning() {
-    if (__DEV__) {
-      const learnMoreButton = (
-        <Text onPress={this._handleLearnMorePress} style={styles.helpLinkText}>
-          Learn more
-        </Text>
-      );
 
-      return (
-        <Text style={styles.developmentModeText}>
-          Development mode is enabled, your app will be slower but you can use
-          useful development tools. {learnMoreButton}
-        </Text>
-      );
-    } else {
-      return (
-        <Text style={styles.developmentModeText}>
-          You are not in development mode, your app will run at full speed.
-        </Text>
-      );
-    }
-  }
 
-  _handleLearnMorePress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/development-mode'
-    );
-  };
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
 }
 
 const styles = StyleSheet.create({

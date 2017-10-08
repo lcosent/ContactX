@@ -9,6 +9,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LinksScreen from '../screens/LinksScreen';
 import SettingsScreen from '../screens/SettingsScreen';
 import DetailsScreen from '../screens/DetailsScreen';
+import NewContact from '../screens/NewContact';
 
 const RootStackNavigator = StackNavigator(
   {
@@ -17,6 +18,9 @@ const RootStackNavigator = StackNavigator(
     },
     detailsScreen: {
       screen: DetailsScreen,
+    },
+    newContact: {
+      screen: NewContact,
     },
   },
   {
